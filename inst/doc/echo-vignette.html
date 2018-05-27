@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Hannah De los Santos" />
+
+<meta name="date" content="2018-05-24" />
+
+<title>Introduction to Using ECHO</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to Using ECHO</h1>
+<h4 class="author"><em>Hannah De los Santos</em></h4>
+<h4 class="date"><em>2018-05-24</em></h4>
+
+
+
+<style type="text/css">
+
+h1.title {
+  text-align: center;
+}
+h4.author { 
+  text-align: center;
+}
+h4.date { 
+  text-align: center;
+}
+</style>
+<p>The <em>echo.find</em> package provides a function (echo_find()) designed to find rhythms from expression data using extended harmonic oscillators. To read more about our inital work on this project and cite us, see <a href="https://dl.acm.org/citation.cfm?id=3107420&amp;CFID=1006798692&amp;CFTOKEN=88816139">Circadian Rhythms in Neurospora Exhibit Biologically Relevant Driven and Damped Harmonic Oscillations</a> by H. De los Santos et al. (2017) Further, for users who prefer an interface more than coding, as well as built-in visualizations, our GitHub repository can be found <a href="https://github.com/delosh653/ECHO">here</a>. There, you can find a shiny application for finding rhythms and automatically visualizing results, with features such as Venn diagrams, heat maps, gene expression plots (with or without replicates visualized), and parameter density graphs. A FAQ for possible user errors can also be found there.</p>
+<p>In this vignette, we’ll walk through an example of how to use <em>echo.find</em>, and how to choose from the several different built-in methods of preprocessing.</p>
+<div id="loading-and-examining-data" class="section level2">
+<h2>Loading and Examining Data</h2>
+<p>We’ll start by loading our library, which contains the echo_find() function. It also has an example dataframe, expressions, which we’ll be using throughout this vignette. Here we’ll look at the first few rows and columns of our dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(echo.find)
+<span class="kw">head</span>(expressions[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>])</code></pre></div>
+<pre><code>##   Gene.Name      CT2.1      CT2.2      CT2.3      CT4.1
+## 1  Sample 1  1.6331179  1.4976053  1.5138102  1.3095535
+## 2  Sample 2 -0.6303192 -0.6027464 -0.5105009 -0.5062033
+## 3  Sample 3         NA -0.7802214 -0.7767950  0.2847617
+## 4  Sample 4  0.4659923  0.4940659         NA  0.1018655
+## 5  Sample 5  0.7026372  0.6405812  1.0235155  1.7199453
+## 6  Sample 6  0.9261508  0.8858768  0.8035570         NA</code></pre>
+<p>Note the data format: its first column first column has gene labels/names, and all other columns have numerical expression data. This expression data is ordered by time point then by replicate, and has evenly spaced time points. Any missing data has cells left blank. In order to use the echo_find() function, data must be in this format. Now, let’s look at one the data expressions, Sample 2. Here we plot each of the replicates in a different color, then plot the difference between them in gray.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+
+tp &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">2</span>,<span class="dv">48</span>,<span class="dt">by=</span><span class="dv">2</span>) <span class="co"># our time points</span>
+num_reps &lt;-<span class="st"> </span><span class="dv">3</span> <span class="co"># number of replicates</span>
+
+samp &lt;-<span class="st"> </span><span class="dv">2</span> <span class="co"># sample we want to look at</span>
+ex.df &lt;-<span class="st"> </span>expressions[samp,<span class="op">-</span><span class="dv">1</span>] <span class="co"># expression data for the first sample</span>
+
+<span class="co"># our visualization data frame       </span>
+ribbon.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">matrix</span>(<span class="dt">ncol =</span> <span class="dv">3</span><span class="op">+</span>num_reps, <span class="dt">nrow =</span> <span class="kw">length</span>(tp)))
+<span class="co"># assigning column names</span>
+<span class="kw">colnames</span>(ribbon.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Times&quot;</span>,<span class="st">&quot;Min&quot;</span>,<span class="st">&quot;Max&quot;</span>, 
+                         <span class="kw">paste</span>(<span class="kw">rep</span>(<span class="st">&quot;Rep&quot;</span>,num_reps),<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span>num_reps), <span class="dt">sep=</span><span class="st">&quot;.&quot;</span>)) 
+ribbon.df<span class="op">$</span>Times &lt;-<span class="st"> </span>tp
+<span class="co"># getting min values of replicates</span>
+ribbon.df<span class="op">$</span>Min &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">seq</span>(<span class="dv">1</span>,<span class="kw">ncol</span>(ex.df), <span class="dt">by =</span> num_reps),
+                        <span class="cf">function</span>(x) <span class="kw">min</span>(<span class="kw">unlist</span>(ex.df[,<span class="kw">c</span>(x<span class="op">:</span>(num_reps<span class="op">-</span><span class="dv">1</span><span class="op">+</span>x))]), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+<span class="co"># getting max values of replicates</span>
+ribbon.df<span class="op">$</span>Max &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">seq</span>(<span class="dv">1</span>,<span class="kw">ncol</span>(ex.df), <span class="dt">by =</span> num_reps),
+                        <span class="cf">function</span>(x) <span class="kw">max</span>(<span class="kw">unlist</span>(ex.df[,<span class="kw">c</span>(x<span class="op">:</span>(num_reps<span class="op">-</span><span class="dv">1</span><span class="op">+</span>x))]), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+<span class="co"># assign each of the replicates to the visualization data frame</span>
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>num_reps){ 
+  ribbon.df[,<span class="dv">3</span><span class="op">+</span>i] &lt;-<span class="st"> </span><span class="kw">t</span>(ex.df[,<span class="kw">seq</span>(i,<span class="kw">ncol</span>(ex.df),<span class="dt">by=</span>num_reps)])
+}
+
+<span class="co"># color names</span>
+color_bar &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Rep.1&quot;</span>=<span class="st">&quot;red&quot;</span>,<span class="st">&quot;Rep.2&quot;</span>=<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;Rep.3&quot;</span>=<span class="st">&quot;green&quot;</span>)
+
+<span class="co"># visualize, with shading for each row</span>
+p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> ribbon.df,<span class="kw">aes</span>(<span class="dt">x=</span>Times))<span class="op">+</span><span class="st"> </span><span class="co"># declare the dataframe and main variables</span>
+<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Times, <span class="dt">ymax=</span>Max, <span class="dt">ymin=</span>Min, <span class="dt">colour=</span><span class="st">&quot;Original&quot;</span>),
+              <span class="dt">fill =</span> <span class="st">&quot;gray&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span><span class="st"> </span><span class="co"># create shading</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(expressions[samp,<span class="dv">1</span>])<span class="op">+</span><span class="st"> </span><span class="co"># gene name is title</span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="st">&quot;&quot;</span>,<span class="dt">values=</span>color_bar)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="st">&quot;&quot;</span>,<span class="dt">values=</span>color_bar)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> .<span class="dv">5</span>),
+        <span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>,<span class="dt">legend.direction =</span> <span class="st">&quot;horizontal&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Hours&quot;</span>, <span class="dt">y=</span><span class="st">&quot;Expression&quot;</span>) <span class="co">#Label for axes</span>
+<span class="co"># add specific replicate lines </span>
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>num_reps){
+  p &lt;-<span class="st"> </span>p <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">data =</span> ribbon.df,
+              <span class="kw">aes_string</span>(<span class="dt">x=</span><span class="st">&quot;Times&quot;</span>,<span class="dt">y=</span><span class="kw">paste</span>(<span class="st">&quot;Rep&quot;</span>,i,<span class="dt">sep =</span> <span class="st">&quot;.&quot;</span>)),
+              <span class="dt">colour=</span>color_bar[i])
+}
+
+<span class="kw">suppressWarnings</span>(p) <span class="co"># to ignore warnings for missing values</span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>It very clearly has an oscillitory pattern with a small amount of damping, making echo_find() the perfect function for our dataset.</p>
+</div>
+<div id="running-echo_find" class="section level2">
+<h2>Running echo_find()</h2>
+<p>So we begin by assigning our parameters and running the echo_find() function. In this first run, we look for rhythms between 20 and 26 hours, with no preprocessing, assigning these results to a new dataframe.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># echo_find() parameters</span>
+
+genes &lt;-<span class="st"> </span>expressions
+begin &lt;-<span class="st"> </span><span class="dv">2</span> <span class="co"># first time point</span>
+end &lt;-<span class="st"> </span><span class="dv">48</span> <span class="co"># last time point</span>
+resol &lt;-<span class="st"> </span><span class="dv">2</span> <span class="co"># time point resolution</span>
+num_reps &lt;-<span class="st"> </span><span class="dv">3</span> <span class="co"># number of replicates</span>
+low &lt;-<span class="st"> </span><span class="dv">20</span> <span class="co"># low period seeking</span>
+high &lt;-<span class="st"> </span><span class="dv">26</span> <span class="co"># high period seeking</span>
+run_all_per &lt;-<span class="st"> </span><span class="ot">FALSE</span> <span class="co"># we are not looking for all periods</span>
+paired &lt;-<span class="st"> </span><span class="ot">FALSE</span> <span class="co"># these replicates are unrelated, that is, a replicate being </span>
+  <span class="co"># called &quot;replicate 1&quot; at time point 2 means nothing</span>
+rem_unexpr &lt;-<span class="st"> </span><span class="ot">FALSE</span> <span class="co"># do not remove unexpressed genes</span>
+<span class="co"># we do not assign rem_unexpr_amt, since we're not removing unexpressed genes</span>
+is_normal &lt;-<span class="st"> </span><span class="ot">FALSE</span> <span class="co"># do not normalize</span>
+is_de_linear_trend &lt;-<span class="st"> </span><span class="ot">FALSE</span> <span class="co"># do not remove linear trends</span>
+is_smooth &lt;-<span class="st"> </span><span class="ot">FALSE</span> <span class="co"># do not smooth the data</span>
+
+results &lt;-<span class="st"> </span><span class="kw">echo_find</span>(<span class="dt">genes =</span> genes, <span class="dt">begin =</span> begin, <span class="dt">end =</span> end, <span class="dt">resol =</span> resol, 
+  <span class="dt">num_reps =</span> num_reps, <span class="dt">low =</span> low, <span class="dt">high =</span> high, <span class="dt">run_all_per =</span> run_all_per,
+  <span class="dt">paired =</span> paired, <span class="dt">rem_unexpr =</span> rem_unexpr, <span class="dt">is_normal =</span> is_normal,
+  <span class="dt">is_de_linear_trend =</span> is_de_linear_trend, <span class="dt">is_smooth =</span> is_smooth)
+
+<span class="kw">head</span>(results[,<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>])</code></pre></div>
+<pre><code>##   Gene Name Convergence Iterations Forcing.Coefficient Oscillation Type
+## 1  Sample 1           1          7         -0.05319486           Driven
+## 2  Sample 2           1          4          0.01320725           Damped
+## 3  Sample 3           1          6         -0.07006987           Driven
+## 4  Sample 4           1         20         -0.07987795           Driven
+## 5  Sample 5           1         10         -0.04007403           Driven
+## 6  Sample 6           1         22          0.11424173           Damped
+##   Amplitude Radian.Frequency   Period Phase Shift Hours Shifted
+## 1 1.2113583        0.3141593 20.00000  -0.4740203     -1.508853
+## 2 0.7143808        0.2749550 22.85169   2.4479303      8.903022
+## 3 1.6853526        0.2811149 22.35095   3.7599389     13.375096
+## 4 1.0511889        0.2416610 26.00000   0.3759410      1.555655
+## 5 1.4596106        0.3141593 20.00000   4.6366571     14.758938
+## 6 0.8895897        0.2416610 26.00000   4.5536533     18.843147
+##   Equilibrium Value       Tau      P-Value BH Adj P-Value BY Adj P-Value
+## 1        0.32913648 0.9020772 9.664994e-41   2.899498e-40   8.997754e-40
+## 2        0.12870140 0.9139466 5.990448e-43   2.396179e-42   7.435849e-42
+## 3       -0.09077891 0.9920870 1.419260e-68   1.703112e-67   5.285114e-67
+## 4       -0.13255814 0.8397626 1.085176e-31   1.860301e-31   5.772907e-31
+## 5        0.44750824 0.9117506 3.291152e-43   1.974691e-42   6.127882e-42
+## 6        0.43648666 0.7836930 3.312238e-26   4.968357e-26   1.541786e-25</code></pre>
+<p>Now we can see that the results data frame has information about the parameters, including forcing coefficient values (whether the oscillation is damped, driven, harmonic, etc.) and p-values. Let’s look at how the fit and parameters turned out for our initial sample. Here we add the fitted values to our plot in black and print the parameters to the console.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># assign the fit to the visualization data frame</span>
+ribbon.df<span class="op">$</span>Fit &lt;-<span class="st"> </span><span class="kw">t</span>(results[samp,(<span class="dv">16</span><span class="op">+</span>(<span class="kw">length</span>(tp)<span class="op">*</span>num_reps))<span class="op">:</span><span class="kw">ncol</span>(results)])
+
+<span class="co"># visualize, with shading for each row</span>
+<span class="co"># add Fit line</span>
+p &lt;-<span class="st"> </span>p <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> ribbon.df,
+            <span class="kw">aes_string</span>(<span class="dt">x=</span><span class="st">&quot;Times&quot;</span>,<span class="dt">y=</span><span class="st">&quot;Fit&quot;</span>),
+            <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>)
+
+<span class="kw">suppressWarnings</span>(p) <span class="co"># to ignore warnings for missing values</span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># print sample's parameters</span>
+<span class="kw">cat</span>(<span class="kw">paste0</span>(<span class="st">&quot;Gene Name: &quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">Gene Name</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Convergence:&quot;</span>, results<span class="op">$</span>Convergence[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Iterations:&quot;</span>,results<span class="op">$</span>Iterations[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Forcing Coefficient:&quot;</span>, results<span class="op">$</span>Forcing.Coefficient[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Oscillation Type:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">Oscillation Type</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Amplitude&quot;</span>, results<span class="op">$</span>Amplitude[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Radian.Frequency:&quot;</span>,results<span class="op">$</span>Radian.Frequency[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Period:&quot;</span>,results<span class="op">$</span>Period[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Phase Shift:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">Phase Shift</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Hours Shifted:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">Hours Shifted</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;P-Value:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">P-Value</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;BH Adj P-Value:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">BH Adj P-Value</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;BY Adj P-Value:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">BY Adj P-Value</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>))</code></pre></div>
+<pre><code>## Gene Name: Sample 2
+## Convergence:1
+## Iterations:4
+## Forcing Coefficient:0.0132072534540353
+## Oscillation Type:Damped
+## Amplitude0.714380770631262
+## Radian.Frequency:0.274954971032941
+## Period:22.8516883458231
+## Phase Shift:2.44793026287669
+## Hours Shifted:8.9030223882856
+## P-Value:5.99044824813101e-43
+## BH Adj P-Value:2.3961792992524e-42
+## BY Adj P-Value:7.43584918834744e-42</code></pre>
+<p>This fit matches pretty closely to the trend, which is emphasized by the very low adjusted p-value. As we predicted, the oscillation is also damped, which is shown by the positive forcing coefficient and the designation of the oscillation type.</p>
+<p>Now let’s see how preprocessing affects the results. Here we search for all possible periods, using the default values for low and high, as well as allowing for all our preprocessing options: removing unexpressed genes, normalizing, removing linear trends, and smoothing.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">run_all_per &lt;-<span class="st"> </span><span class="ot">TRUE</span> <span class="co"># looking for all possible periods</span>
+rem_unexpr &lt;-<span class="st"> </span><span class="ot">TRUE</span> <span class="co"># remove unexpressed genes</span>
+rem_unexpr_amt &lt;-<span class="st"> </span><span class="dv">70</span> <span class="co"># percentage of unexpressed genes</span>
+is_normal &lt;-<span class="st"> </span><span class="ot">TRUE</span> <span class="co"># normalize</span>
+is_de_linear_trend &lt;-<span class="st"> </span><span class="ot">TRUE</span> <span class="co"># remove linear trends</span>
+is_smooth &lt;-<span class="st"> </span><span class="ot">TRUE</span> <span class="co"># smooth the data</span>
+
+<span class="co"># we're using the default values of low and high, since we're looking for all periods</span>
+results &lt;-<span class="st"> </span><span class="kw">echo_find</span>(<span class="dt">genes =</span> genes, <span class="dt">begin =</span> begin, <span class="dt">end =</span> end, <span class="dt">resol =</span> resol, 
+  <span class="dt">num_reps =</span> num_reps, <span class="dt">run_all_per =</span> run_all_per, <span class="dt">paired =</span> paired, 
+  <span class="dt">rem_unexpr =</span> rem_unexpr, <span class="dt">rem_unexpr_amt =</span> rem_unexpr_amt, <span class="dt">is_normal =</span> is_normal,
+  <span class="dt">is_de_linear_trend =</span> is_de_linear_trend, <span class="dt">is_smooth =</span> is_smooth)
+
+<span class="kw">head</span>(results[,<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>])</code></pre></div>
+<pre><code>##   Gene Name Convergence Iterations Forcing.Coefficient Oscillation Type
+## 1  Sample 1           1          7        -0.051536453           Driven
+## 2  Sample 2           1          5         0.011582231           Damped
+## 3  Sample 3           1         22         0.005357267         Harmonic
+## 4  Sample 4           1          9        -0.078117229           Driven
+## 5  Sample 5           1          9        -0.026718082           Driven
+## 6  Sample 6           1         19         0.036078605           Damped
+##    Amplitude Radian.Frequency   Period Phase Shift Hours Shifted
+## 1  0.6164627        0.3243511 19.37155  -0.6585025     -2.030215
+## 2  1.5772248        0.2731878 22.99951   2.5290548      9.257569
+## 3 -0.6307775        0.4780950 13.14213  -1.5783226     -3.301274
+## 4  0.4262496        0.2191198 28.67466   0.9115305      4.159965
+## 5  0.9433894        0.3249436 19.33624  -1.9850863     -6.109019
+## 6  1.6033760        0.1655006 37.96474   5.9626819     36.028169
+##   Equilibrium Value       Tau      P-Value BH Adj P-Value BY Adj P-Value
+## 1       0.002159052 0.9515331 9.508710e-52   5.705226e-51   1.770452e-50
+## 2       0.095058330 0.9505440 1.812635e-51   7.250539e-51   2.249995e-50
+## 3       0.002815542 0.1562809 7.412930e-02   7.412930e-02   2.300388e-01
+## 4       0.110273440 0.9287834 4.887969e-46   1.466391e-45   4.550520e-45
+## 5      -0.267901020 0.8925659 9.792497e-40   1.678714e-39   5.209402e-39
+## 6      -0.040058335 0.7127098 1.937502e-20   2.325002e-20   7.214971e-20</code></pre>
+<p>Since we’ve now searched for all possible periods, periods can now fall outside our predetermined range of 20 to 26 that we set in our first run. Let’s see how this affected the fit and parameters of the sample we looked at.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rep_genes &lt;-<span class="st"> </span>results[samp,<span class="dv">16</span><span class="op">:</span>(<span class="dv">15</span><span class="op">+</span>(<span class="kw">length</span>(tp)<span class="op">*</span>num_reps))]
+
+ <span class="co"># getting min values of replicates</span>
+ribbon.df<span class="op">$</span>Min &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">seq</span>(<span class="dv">1</span>,<span class="kw">ncol</span>(rep_genes), <span class="dt">by =</span> num_reps), 
+                        <span class="cf">function</span>(x) <span class="kw">min</span>(<span class="kw">unlist</span>(rep_genes[,<span class="kw">c</span>(x<span class="op">:</span>(num_reps<span class="op">-</span><span class="dv">1</span><span class="op">+</span>x))]),
+                                        <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+ <span class="co"># getting max values of replicates</span>
+ribbon.df<span class="op">$</span>Max &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">seq</span>(<span class="dv">1</span>,<span class="kw">ncol</span>(rep_genes), <span class="dt">by =</span> num_reps),
+                        <span class="cf">function</span>(x) <span class="kw">max</span>(<span class="kw">unlist</span>(rep_genes[,<span class="kw">c</span>(x<span class="op">:</span>(num_reps<span class="op">-</span><span class="dv">1</span><span class="op">+</span>x))]),
+                                        <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>num_reps){ <span class="co"># assign each of the replicates</span>
+  ribbon.df[,<span class="dv">3</span><span class="op">+</span>i] &lt;-<span class="st"> </span><span class="kw">t</span>(rep_genes[,<span class="kw">seq</span>(i,<span class="kw">ncol</span>(rep_genes),<span class="dt">by=</span>num_reps)])
+}
+<span class="co"># assign the fit to the visualization data frame</span>
+ribbon.df<span class="op">$</span>Fit &lt;-<span class="st"> </span><span class="kw">t</span>(results[samp,(<span class="dv">16</span><span class="op">+</span>(<span class="kw">length</span>(tp)<span class="op">*</span>num_reps))<span class="op">:</span><span class="kw">ncol</span>(results)])
+
+<span class="co"># visualize, with shading for each row</span>
+p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> ribbon.df,<span class="kw">aes</span>(<span class="dt">x=</span>Times))<span class="op">+</span><span class="st"> </span><span class="co"># declare the dataframe and main variables</span>
+<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Times, <span class="dt">ymax=</span>Max, <span class="dt">ymin=</span>Min, <span class="dt">colour=</span><span class="st">&quot;Original&quot;</span>),
+              <span class="dt">fill =</span> <span class="st">&quot;gray&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span><span class="st"> </span><span class="co"># create shading</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(expressions[samp,<span class="dv">1</span>])<span class="op">+</span><span class="st"> </span><span class="co"># gene name is title</span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="st">&quot;&quot;</span>,<span class="dt">values=</span>color_bar)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="st">&quot;&quot;</span>,<span class="dt">values=</span>color_bar)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> .<span class="dv">5</span>),
+        <span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>,<span class="dt">legend.direction =</span> <span class="st">&quot;horizontal&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Hours&quot;</span>, <span class="dt">y=</span><span class="st">&quot;Expression&quot;</span>) <span class="co">#Label for axes</span>
+<span class="co"># add specific replicate lines </span>
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>num_reps){
+  p &lt;-<span class="st"> </span>p <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">data =</span> ribbon.df,
+              <span class="kw">aes_string</span>(<span class="dt">x=</span><span class="st">&quot;Times&quot;</span>,<span class="dt">y=</span><span class="kw">paste</span>(<span class="st">&quot;Rep&quot;</span>,i,<span class="dt">sep =</span> <span class="st">&quot;.&quot;</span>)),
+              <span class="dt">colour=</span>color_bar[i])
+}
+
+<span class="co"># add Fit line</span>
+p &lt;-<span class="st"> </span>p <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> ribbon.df,
+            <span class="kw">aes_string</span>(<span class="dt">x=</span><span class="st">&quot;Times&quot;</span>,<span class="dt">y=</span><span class="st">&quot;Fit&quot;</span>),
+            <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>)
+
+<span class="kw">suppressWarnings</span>(p) <span class="co"># to ignore warnings for missing values</span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># print sample's parameters</span>
+<span class="kw">cat</span>(<span class="kw">paste0</span>(<span class="st">&quot;Gene Name: &quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">Gene Name</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Convergence:&quot;</span>, results<span class="op">$</span>Convergence[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Iterations:&quot;</span>,results<span class="op">$</span>Iterations[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Forcing Coefficient:&quot;</span>, results<span class="op">$</span>Forcing.Coefficient[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Oscillation Type:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">Oscillation Type</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Amplitude&quot;</span>, results<span class="op">$</span>Amplitude[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Radian.Frequency:&quot;</span>,results<span class="op">$</span>Radian.Frequency[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Period:&quot;</span>,results<span class="op">$</span>Period[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Phase Shift:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">Phase Shift</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;Hours Shifted:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">Hours Shifted</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;P-Value:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">P-Value</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;BH Adj P-Value:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">BH Adj P-Value</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,
+           <span class="st">&quot;BY Adj P-Value:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">BY Adj P-Value</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>))</code></pre></div>
+<pre><code>## Gene Name: Sample 2
+## Convergence:1
+## Iterations:5
+## Forcing Coefficient:0.0115822306119123
+## Oscillation Type:Damped
+## Amplitude1.57722478904992
+## Radian.Frequency:0.273187781527227
+## Period:22.999510710377
+## Phase Shift:2.52905477304299
+## Hours Shifted:9.25756913030508
+## P-Value:1.81263485251528e-51
+## BH Adj P-Value:7.25053941006114e-51
+## BY Adj P-Value:2.24999513200891e-50</code></pre>
+<p>We can see that the fit hasn’t changed very much, but that the smoothing has gotten the replicates much closer to each other. This smoothing has also reduced the amount of damping in the system: the forcing coefficient has decreased by about .002.</p>
+<p>Now that you understand the basics of using the echo_find() function, feel free to experiment and play around with this vignette and the example data. Good luck with your rhythm searches!</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
