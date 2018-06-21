@@ -708,9 +708,21 @@ calculate_param <- function(current_gene,times,resol,num_reps,tied,is_smooth=FAL
       type_gam <- "Repressed"
     }
 
-    # calculating the phase shift in terms of period
-    frac_part <- (phi/(2*pi)) - trunc(phi/(2*pi))
-    phase_hours <- frac_part*(2*pi/omega)
+    # calculating the phase shift in terms of period (omega inverse of period)
+    if (phi > 0){ # shift to the left
+      frac_part <- (phi/(2*pi)) - trunc(phi/(2*pi))
+      dist_peak <- frac_part*(2*pi/omega) # distance from first peak
+      phase_hours <- (2*pi/omega)-dist_peak
+    } else { # shift to the right
+      frac_part <- (phi/(2*pi)) - trunc(phi/(2*pi))
+      dist_peak <- frac_part*(2*pi/omega) # distance from first peak
+      phase_hours <- (2*pi/omega)+abs(dist_peak)
+      phase_hours <- abs(dist_peak)
+    }
+    # should be no negative shifts
+    # if (phase_hours < 0){ # only output positive shifts
+    #   phase_hours <- phase_hours + (2*pi/omega)
+    # }
 
     # calculate p-value
     ref_wave <- (alt_form(a,gam,omega,phi,y_shift,times)) # fitted values
