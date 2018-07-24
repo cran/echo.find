@@ -2,7 +2,7 @@ Package: echo.find
 Type: Package
 Title: Finding Rhythms Using Extended Circadian Harmonic Oscillators
         (ECHO)
-Version: 1.1.1
+Version: 1.2.1
 Authors@R: c(person("Hannah", "De los Santos", email = "delosh@rpi.edu",
   role = c("aut", "cre")),
   person("Emily", "Collins", role = c("aut")),
@@ -22,7 +22,7 @@ RoxygenNote: 6.0.1
 Suggests: knitr, rmarkdown, ggplot2
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2018-06-21 15:05:45 UTC; delosh
+Packaged: 2018-07-24 19:51:19 UTC; delosh
 Author: Hannah De los Santos [aut, cre],
   Emily Collins [aut],
   Jonathan Shewchuk [ctb],
@@ -31,4 +31,4 @@ Author: Hannah De los Santos [aut, cre],
   Jennifer Hurley [aut]
 Maintainer: Hannah De los Santos <delosh@rpi.edu>
 Repository: CRAN
-Date/Publication: 2018-06-21 16:52:44 UTC
+Date/Publication: 2018-07-24 20:30:03 UTC

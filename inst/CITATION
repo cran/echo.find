@@ -8,12 +8,12 @@ citEntry(entry = "Manual",
                   as.person("Jennifer Hurley")),
   journal      = "Journal of Statistical Software",
   year         = "2018",
-  note         = "R package version 1.1.1",
+  note         = "R package version 1.2.1",
   url          = "https://github.com/delosh653/ECHO",
 
   textVersion  =
   paste("Hannah De los Santos, Emily Collins, Kristin Bennett, Jennifer Hurley (2018).",
         "Finding Rhythms Using Extended Circadian Harmonic Oscillators (ECHO).",
-        "R package version 1.1.1.",
+        "R package version 1.2.1.",
         "URL https://github.com/delosh653/ECHO.")
 )

@@ -422,163 +422,235 @@ calculate_param <- function(current_gene,times,resol,num_reps,tied,is_smooth=FAL
     peaks <- c(); # vector of peak values
     peaks_time <- c(); # vector of peak times
     counting <- 1; # counter
-    if (resol <= 1){
-      # go through gene values and find maximum as compared to 8 surrounding values
-      # finding peaks for first 4 points
-      # deal with complete missingness
-      # if (suppressWarnings(max(y_val[1:9], na.rm = TRUE)) != -Inf){
-      #   for (i in 1:4){
-      #     # otherwise continue as normal
-      #     if (y_val[i] == max(y_val[1:9], na.rm = TRUE)){
-      #       peaks[counting] <- y_val[i]
-      #       peaks_time[counting] <- times[i]
-      #       counting <- counting+1
-      #     }
-      #   }
-      # }
 
-      for(i in 5:(length(y_val)-4)){
+    # go through gene values and find maximum as compared to 8 surrounding values
+    # finding peaks for first 4 points
+    # deal with complete missingness
+    # if (suppressWarnings(max(y_val[1:9], na.rm = TRUE)) != -Inf){
+    #   for (i in 1:4){
+    #     # otherwise continue as normal
+    #     if (y_val[i] == max(y_val[1:9], na.rm = TRUE)){
+    #       peaks[counting] <- y_val[i]
+    #       peaks_time[counting] <- times[i]
+    #       counting <- counting+1
+    #     }
+    #   }
+    # }
+
+    if (resol <= ((1/12)+10^-8)){ # 17 hour surround
+      mod <- 102
+      for(i in (mod+1):(length(y_val)-mod)){
         # deal with complete missingness
-        if (suppressWarnings(max(y_val[i-4],y_val[i-3],y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],y_val[i+3],y_val[i+4], na.rm = TRUE)) == -Inf | is.na(y_val[i])){
+        if (suppressWarnings(max(y_val[(i-mod):(i+mod)], na.rm = TRUE)) == -Inf | is.na(y_val[i])){
           next
         }
         # otherwise continue as normal
-        if (y_val[i] == max(y_val[i-4],y_val[i-3],y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],y_val[i+3],y_val[i+4], na.rm = TRUE)){
+        if (y_val[i] == max(y_val[(i-mod):(i+mod)], na.rm = TRUE)){
           peaks[counting] <- y_val[i]
           peaks_time[counting] <- times[i]
           counting <- counting+1
         }
       }
-
-      # finding peaks for last 4 points
-      # deal with complete missingness
-      # if (suppressWarnings(max(y_val[(length(y_val)-8):length(y_val)], na.rm = TRUE)) != -Inf){
-      #   for (i in (length(y_val)-3):length(y_val)){
-      #     # otherwise continue as normal
-      #     if (y_val[i] == max(y_val[(length(y_val)-8):length(y_val)], na.rm = TRUE)){
-      #       peaks[counting] <- y_val[i]
-      #       peaks_time[counting] <- times[i]
-      #       counting <- counting+1
-      #     }
-      #   }
-      # }
-    } else if (resol <=2){
-      # go through gene values and find maximum as compared to six surrounding values
-      # finding peaks for first 3 points
-      # deal with complete missingness
-      # if (suppressWarnings(max(y_val[1:7], na.rm = TRUE)) != -Inf){
-      #   for (i in 1:3){
-      #     # otherwise continue as normal
-      #     if (y_val[i] == max(y_val[1:7], na.rm = TRUE)){
-      #       peaks[counting] <- y_val[i]
-      #       peaks_time[counting] <- times[i]
-      #       counting <- counting+1
-      #     }
-      #   }
-      # }
-      for(i in 4:(length(y_val)-3)){
+    } else if (resol <= ((1/6)+10^-8)){ # 15 hour surround
+      mod <- 45
+      for(i in (mod+1):(length(y_val)-mod)){
         # deal with complete missingness
-        if (suppressWarnings(max(y_val[i-3],y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],y_val[i+3], na.rm = TRUE)) == -Inf | is.na(y_val[i])){
+        if (suppressWarnings(max(y_val[(i-mod):(i+mod)], na.rm = TRUE)) == -Inf | is.na(y_val[i])){
           next
         }
         # otherwise continue as normal
-        if (y_val[i] == max(y_val[i-3],y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],y_val[i+3], na.rm = TRUE)){
+        if (y_val[i] == max(y_val[(i-mod):(i+mod)], na.rm = TRUE)){
           peaks[counting] <- y_val[i]
           peaks_time[counting] <- times[i]
           counting <- counting+1
         }
       }
-      # finding peaks for last 3 points
-      # deal with complete missingness
-      # if (suppressWarnings(max(y_val[(length(y_val)-6):length(y_val)], na.rm = TRUE)) != -Inf){
-      #   for (i in (length(y_val)-2):length(y_val)){
-      #     # otherwise continue as normal
-      #     if (y_val[i] == max(y_val[(length(y_val)-6):length(y_val)], na.rm = TRUE)){
-      #       peaks[counting] <- y_val[i]
-      #       peaks_time[counting] <- times[i]
-      #       counting <- counting+1
-      #     }
-      #   }
-      # }
-    } else if (resol <= 4){
-      # finding peaks for first 2 points
-      # deal with complete missingness
-      # if (suppressWarnings(max(y_val[1:5], na.rm = TRUE)) != -Inf){
-      #   for (i in 1:2){
-      #     # otherwise continue as normal
-      #     if (y_val[i] == max(y_val[1:5], na.rm = TRUE)){
-      #       peaks[counting] <- y_val[i]
-      #       peaks_time[counting] <- times[i]
-      #       counting <- counting+1
-      #     }
-      #   }
-      # }
-      # go through gene values and find maximum as compared to four surrounding values
-      for(i in 3:(length(y_val)-2)){
-        # to deal with complete missingness
-        if(suppressWarnings(max(y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],na.rm = TRUE))== -Inf  | is.na(y_val[i])){
+    } else if (resol <= ((1/4)+10^-8)){ # 13 hour surround
+      mod <- 26
+      for(i in (mod+1):(length(y_val)-mod)){
+        # deal with complete missingness
+        if (suppressWarnings(max(y_val[(i-mod):(i+mod)], na.rm = TRUE)) == -Inf | is.na(y_val[i])){
           next
         }
-        if (y_val[i] == max(y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],na.rm = TRUE)){
+        # otherwise continue as normal
+        if (y_val[i] == max(y_val[(i-mod):(i+mod)], na.rm = TRUE)){
           peaks[counting] <- y_val[i]
           peaks_time[counting] <- times[i]
           counting <- counting+1
         }
       }
-
-      # finding peaks for last 3 points
-      # deal with complete missingness
-      # if (suppressWarnings(max(y_val[(length(y_val)-4):length(y_val)], na.rm = TRUE)) != -Inf){
-      #   for (i in (length(y_val)-1):length(y_val)){
-      #     # otherwise continue as normal
-      #     if (y_val[i] == max(y_val[(length(y_val)-4):length(y_val)], na.rm = TRUE)){
-      #       peaks[counting] <- y_val[i]
-      #       peaks_time[counting] <- times[i]
-      #       counting <- counting+1
-      #     }
-      #   }
-      # }
-
-    } else{
-      # finding peaks for first point
-      # deal with complete missingness
-      # if (suppressWarnings(max(y_val[1:3], na.rm = TRUE)) != -Inf){
-      #   for (i in 1){
-      #     # otherwise continue as normal
-      #     if (y_val[i] == max(y_val[1:3], na.rm = TRUE)){
-      #       peaks[counting] <- y_val[i]
-      #       peaks_time[counting] <- times[i]
-      #       counting <- counting+1
-      #     }
-      #   }
-      # }
-
-      # go through gene values and find maximum as compared to two surrounding values
-      for(i in 2:(length(y_val)-1)){
-        # to deal with complete missingness
-        if(suppressWarnings(max(y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],na.rm = TRUE))== -Inf  | is.na(y_val[i])){
+    } else if (resol <= ((1/2)+10^-8)){ # 11 hour surround
+      mod <- 11
+      for(i in (mod+1):(length(y_val)-mod)){
+        # deal with complete missingness
+        if (suppressWarnings(max(y_val[(i-mod):(i+mod)], na.rm = TRUE)) == -Inf | is.na(y_val[i])){
           next
         }
-        if (y_val[i] == max(y_val[i-1],y_val[i],y_val[i+1], na.rm = TRUE)){
+        # otherwise continue as normal
+        if (y_val[i] == max(y_val[(i-mod):(i+mod)], na.rm = TRUE)){
           peaks[counting] <- y_val[i]
           peaks_time[counting] <- times[i]
           counting <- counting+1
         }
       }
+    } else if (resol <= 1){
+        # go through gene values and find maximum as compared to 8 surrounding values
+        # finding peaks for first 4 points
+        # deal with complete missingness
+        # if (suppressWarnings(max(y_val[1:9], na.rm = TRUE)) != -Inf){
+        #   for (i in 1:4){
+        #     # otherwise continue as normal
+        #     if (y_val[i] == max(y_val[1:9], na.rm = TRUE)){
+        #       peaks[counting] <- y_val[i]
+        #       peaks_time[counting] <- times[i]
+        #       counting <- counting+1
+        #     }
+        #   }
+        # }
 
-      # finding peaks for last 3 points
-      # deal with complete missingness
-      # if (suppressWarnings(max(y_val[(length(y_val)-2):length(y_val)], na.rm = TRUE)) != -Inf){
-      #   for (i in length(y_val)){
-      #     # otherwise continue as normal
-      #     if (y_val[i] == max(y_val[(length(y_val)-2):length(y_val)], na.rm = TRUE)){
-      #       peaks[counting] <- y_val[i]
-      #       peaks_time[counting] <- times[i]
-      #       counting <- counting+1
-      #     }
-      #   }
-      # }
-    }
+        for(i in 5:(length(y_val)-4)){
+          # deal with complete missingness
+          if (suppressWarnings(max(y_val[i-4],y_val[i-3],y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],y_val[i+3],y_val[i+4], na.rm = TRUE)) == -Inf | is.na(y_val[i])){
+            next
+          }
+          # otherwise continue as normal
+          if (y_val[i] == max(y_val[i-4],y_val[i-3],y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],y_val[i+3],y_val[i+4], na.rm = TRUE)){
+            peaks[counting] <- y_val[i]
+            peaks_time[counting] <- times[i]
+            counting <- counting+1
+          }
+        }
+
+        # finding peaks for last 4 points
+        # deal with complete missingness
+        # if (suppressWarnings(max(y_val[(length(y_val)-8):length(y_val)], na.rm = TRUE)) != -Inf){
+        #   for (i in (length(y_val)-3):length(y_val)){
+        #     # otherwise continue as normal
+        #     if (y_val[i] == max(y_val[(length(y_val)-8):length(y_val)], na.rm = TRUE)){
+        #       peaks[counting] <- y_val[i]
+        #       peaks_time[counting] <- times[i]
+        #       counting <- counting+1
+        #     }
+        #   }
+        # }
+      } else if (resol <=2){
+        # go through gene values and find maximum as compared to six surrounding values
+        # finding peaks for first 3 points
+        # deal with complete missingness
+        # if (suppressWarnings(max(y_val[1:7], na.rm = TRUE)) != -Inf){
+        #   for (i in 1:3){
+        #     # otherwise continue as normal
+        #     if (y_val[i] == max(y_val[1:7], na.rm = TRUE)){
+        #       peaks[counting] <- y_val[i]
+        #       peaks_time[counting] <- times[i]
+        #       counting <- counting+1
+        #     }
+        #   }
+        # }
+        for(i in 4:(length(y_val)-3)){
+          # deal with complete missingness
+          if (suppressWarnings(max(y_val[i-3],y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],y_val[i+3], na.rm = TRUE)) == -Inf | is.na(y_val[i])){
+            next
+          }
+          # otherwise continue as normal
+          if (y_val[i] == max(y_val[i-3],y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],y_val[i+3], na.rm = TRUE)){
+            peaks[counting] <- y_val[i]
+            peaks_time[counting] <- times[i]
+            counting <- counting+1
+          }
+        }
+        # finding peaks for last 3 points
+        # deal with complete missingness
+        # if (suppressWarnings(max(y_val[(length(y_val)-6):length(y_val)], na.rm = TRUE)) != -Inf){
+        #   for (i in (length(y_val)-2):length(y_val)){
+        #     # otherwise continue as normal
+        #     if (y_val[i] == max(y_val[(length(y_val)-6):length(y_val)], na.rm = TRUE)){
+        #       peaks[counting] <- y_val[i]
+        #       peaks_time[counting] <- times[i]
+        #       counting <- counting+1
+        #     }
+        #   }
+        # }
+      } else if (resol <= 4){
+        # finding peaks for first 2 points
+        # deal with complete missingness
+        # if (suppressWarnings(max(y_val[1:5], na.rm = TRUE)) != -Inf){
+        #   for (i in 1:2){
+        #     # otherwise continue as normal
+        #     if (y_val[i] == max(y_val[1:5], na.rm = TRUE)){
+        #       peaks[counting] <- y_val[i]
+        #       peaks_time[counting] <- times[i]
+        #       counting <- counting+1
+        #     }
+        #   }
+        # }
+        # go through gene values and find maximum as compared to four surrounding values
+        for(i in 3:(length(y_val)-2)){
+          # to deal with complete missingness
+          if(suppressWarnings(max(y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],na.rm = TRUE))== -Inf  | is.na(y_val[i])){
+            next
+          }
+          if (y_val[i] == max(y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],na.rm = TRUE)){
+            peaks[counting] <- y_val[i]
+            peaks_time[counting] <- times[i]
+            counting <- counting+1
+          }
+        }
+
+        # finding peaks for last 3 points
+        # deal with complete missingness
+        # if (suppressWarnings(max(y_val[(length(y_val)-4):length(y_val)], na.rm = TRUE)) != -Inf){
+        #   for (i in (length(y_val)-1):length(y_val)){
+        #     # otherwise continue as normal
+        #     if (y_val[i] == max(y_val[(length(y_val)-4):length(y_val)], na.rm = TRUE)){
+        #       peaks[counting] <- y_val[i]
+        #       peaks_time[counting] <- times[i]
+        #       counting <- counting+1
+        #     }
+        #   }
+        # }
+
+      } else{
+        # finding peaks for first point
+        # deal with complete missingness
+        # if (suppressWarnings(max(y_val[1:3], na.rm = TRUE)) != -Inf){
+        #   for (i in 1){
+        #     # otherwise continue as normal
+        #     if (y_val[i] == max(y_val[1:3], na.rm = TRUE)){
+        #       peaks[counting] <- y_val[i]
+        #       peaks_time[counting] <- times[i]
+        #       counting <- counting+1
+        #     }
+        #   }
+        # }
+
+        # go through gene values and find maximum as compared to two surrounding values
+        for(i in 2:(length(y_val)-1)){
+          # to deal with complete missingness
+          if(suppressWarnings(max(y_val[i-2],y_val[i-1],y_val[i],y_val[i+1],y_val[i+2],na.rm = TRUE))== -Inf  | is.na(y_val[i])){
+            next
+          }
+          if (y_val[i] == max(y_val[i-1],y_val[i],y_val[i+1], na.rm = TRUE)){
+            peaks[counting] <- y_val[i]
+            peaks_time[counting] <- times[i]
+            counting <- counting+1
+          }
+        }
+
+        # finding peaks for last 3 points
+        # deal with complete missingness
+        # if (suppressWarnings(max(y_val[(length(y_val)-2):length(y_val)], na.rm = TRUE)) != -Inf){
+        #   for (i in length(y_val)){
+        #     # otherwise continue as normal
+        #     if (y_val[i] == max(y_val[(length(y_val)-2):length(y_val)], na.rm = TRUE)){
+        #       peaks[counting] <- y_val[i]
+        #       peaks_time[counting] <- times[i]
+        #       counting <- counting+1
+        #     }
+        #   }
+        # }
+      }
+
 
     # calculate starting amplitude, y_shift
     y0 <- mean(y_val,na.rm = TRUE) # intial value for the equilibrium shift
@@ -709,15 +781,38 @@ calculate_param <- function(current_gene,times,resol,num_reps,tied,is_smooth=FAL
     }
 
     # calculating the phase shift in terms of period (omega inverse of period)
-    if (phi > 0){ # shift to the left
-      frac_part <- (phi/(2*pi)) - trunc(phi/(2*pi))
-      dist_peak <- frac_part*(2*pi/omega) # distance from first peak
-      phase_hours <- (2*pi/omega)-dist_peak
-    } else { # shift to the right
-      frac_part <- (phi/(2*pi)) - trunc(phi/(2*pi))
-      dist_peak <- frac_part*(2*pi/omega) # distance from first peak
-      phase_hours <- (2*pi/omega)+abs(dist_peak)
-      phase_hours <- abs(dist_peak)
+    if (!is.na(a)){ # all param will either be na or not
+      if (a >= 0){ # positive amplitudes
+        if (phi > 0){ # shift to the left
+          frac_part <- (phi/(2*pi)) - trunc(phi/(2*pi))
+          dist_peak <- frac_part*(2*pi/omega) # distance from first peak
+          phase_hours <- (2*pi/omega)-dist_peak
+        } else { # shift to the right
+          frac_part <- (phi/(2*pi)) - trunc(phi/(2*pi))
+          dist_peak <- frac_part*(2*pi/omega) # distance from first peak
+          phase_hours <- abs(dist_peak)
+        }
+      } else { # negative ampltitudes
+        if (phi > 0){ # shift to the left
+          frac_part <- (phi/(2*pi)) - trunc(phi/(2*pi))
+          dist_peak <- frac_part*(2*pi/omega) # distance from first peak
+          if (abs(frac_part) < .5){
+            phase_hours <- (2*pi/omega)-dist_peak - (2*pi/omega/2)
+          } else {
+            phase_hours <- (2*pi/omega)-dist_peak + (2*pi/omega/2)
+          }
+        } else { # shift to the right
+          frac_part <- (phi/(2*pi)) - trunc(phi/(2*pi))
+          dist_peak <- frac_part*(2*pi/omega) # distance from first peak
+          if (abs(frac_part) < .5){
+            phase_hours <- abs(dist_peak) + (2*pi/omega/2)
+          } else {
+            phase_hours <- abs(dist_peak) - (2*pi/omega/2)
+          }
+        }
+      }
+    } else {
+      phase_hours <- NA
     }
     # should be no negative shifts
     # if (phase_hours < 0){ # only output positive shifts
