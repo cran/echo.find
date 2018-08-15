@@ -12,7 +12,7 @@
 
 <meta name="author" content="Hannah De los Santos" />
 
-<meta name="date" content="2018-07-24" />
+<meta name="date" content="2018-08-15" />
 
 <title>Introduction to Using ECHO</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to Using ECHO</h1>
 <h4 class="author"><em>Hannah De los Santos</em></h4>
-<h4 class="date"><em>2018-07-24</em></h4>
+<h4 class="date"><em>2018-08-15</em></h4>
 
 
 
@@ -180,25 +180,25 @@ results &lt;-<span class="st"> </span><span class="kw">echo_find</span>(<span cl
 <span class="kw">head</span>(results[,<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>])</code></pre></div>
 <pre><code>##   Gene Name Convergence Iterations Forcing.Coefficient Oscillation Type
 ## 1  Sample 1           1          7         -0.05319486           Driven
-## 2  Sample 2           1          4          0.01320725           Damped
+## 2  Sample 2           1          7          0.01320722           Damped
 ## 3  Sample 3           1          6         -0.07006987           Driven
-## 4  Sample 4           1         20         -0.07987795           Driven
-## 5  Sample 5           1         10         -0.04007403           Driven
-## 6  Sample 6           1         22          0.11424173           Damped
-##   Amplitude Radian.Frequency   Period Phase Shift Hours Shifted
-## 1 1.2113583        0.3141593 20.00000  -0.4740203      1.508853
-## 2 0.7143808        0.2749550 22.85169   2.4479303     13.948666
-## 3 1.6853526        0.2811149 22.35095   3.7599389      8.975854
-## 4 1.0511889        0.2416610 26.00000   0.3759410     24.444345
-## 5 1.4596106        0.3141593 20.00000   4.6366571      5.241062
-## 6 0.8895897        0.2416610 26.00000   4.5536533      7.156853
+## 4  Sample 4           1         27         -0.09719734           Driven
+## 5  Sample 5           1         12         -0.04007398           Driven
+## 6  Sample 6           1         24          0.11423505           Damped
+##    Amplitude Radian.Frequency   Period Phase Shift Hours Shifted
+## 1  1.2113583        0.3141593 20.00000  -0.4740203      1.508853
+## 2  0.7143805        0.2749549 22.85170   2.4479327     13.948662
+## 3  1.6853526        0.2811149 22.35095   3.7599389      8.975854
+## 4 -0.8353948        0.2416610 26.00000   3.6565164     23.869231
+## 5  1.4596116        0.3141593 20.00000  -1.6465278      5.241061
+## 6  0.8879897        0.2416610 26.00000   4.5543195      7.154096
 ##   Equilibrium Value       Tau      P-Value BH Adj P-Value BY Adj P-Value
 ## 1        0.32913648 0.9020772 9.664994e-41   2.899498e-40   8.997754e-40
-## 2        0.12870140 0.9139466 5.990448e-43   2.396179e-42   7.435849e-42
+## 2        0.12870135 0.9139466 5.990448e-43   2.396179e-42   7.435849e-42
 ## 3       -0.09077891 0.9920870 1.419260e-68   1.703112e-67   5.285114e-67
-## 4       -0.13255814 0.8397626 1.085176e-31   1.860301e-31   5.772907e-31
-## 5        0.44750824 0.9117506 3.291152e-43   1.974691e-42   6.127882e-42
-## 6        0.43648666 0.7836930 3.312238e-26   4.968357e-26   1.541786e-25</code></pre>
+## 4       -0.04826653 0.7744807 5.575868e-25   8.363802e-25   2.595464e-24
+## 5        0.44750844 0.9117506 3.291152e-43   1.974691e-42   6.127882e-42
+## 6        0.43646180 0.7836930 3.312238e-26   5.678123e-26   1.762041e-25</code></pre>
 <p>Now we can see that the results data frame has information about the parameters, including forcing coefficient values (whether the oscillation is damped, driven, harmonic, etc.) and p-values. Let’s look at how the fit and parameters turned out for our initial sample. Here we add the fitted values to our plot in black and print the parameters to the console.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># assign the fit to the visualization data frame</span>
 ribbon.df<span class="op">$</span>Fit &lt;-<span class="st"> </span><span class="kw">t</span>(results[samp,(<span class="dv">16</span><span class="op">+</span>(<span class="kw">length</span>(tp)<span class="op">*</span>num_reps))<span class="op">:</span><span class="kw">ncol</span>(results)])
@@ -228,14 +228,14 @@ p &lt;-<span class="st"> </span>p <span class="op">+</span>
            <span class="st">&quot;BY Adj P-Value:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">BY Adj P-Value</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>))</code></pre></div>
 <pre><code>## Gene Name: Sample 2
 ## Convergence:1
-## Iterations:4
-## Forcing Coefficient:0.0132072534540353
+## Iterations:7
+## Forcing Coefficient:0.0132072219323617
 ## Oscillation Type:Damped
-## Amplitude0.714380770631262
-## Radian.Frequency:0.274954971032941
-## Period:22.8516883458231
-## Phase Shift:2.44793026287669
-## Hours Shifted:13.9486659575375
+## Amplitude0.714380488751477
+## Radian.Frequency:0.27495486600141
+## Period:22.851697075066
+## Phase Shift:2.44793271975246
+## Hours Shifted:13.9486623503054
 ## P-Value:5.99044824813101e-43
 ## BH Adj P-Value:2.3961792992524e-42
 ## BY Adj P-Value:7.43584918834744e-42</code></pre>
@@ -256,26 +256,26 @@ results &lt;-<span class="st"> </span><span class="kw">echo_find</span>(<span cl
 
 <span class="kw">head</span>(results[,<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>])</code></pre></div>
 <pre><code>##   Gene Name Convergence Iterations Forcing.Coefficient Oscillation Type
-## 1  Sample 1           1          7        -0.051536453           Driven
-## 2  Sample 2           1          5         0.011582231           Damped
-## 3  Sample 3           1         22         0.005357267         Harmonic
-## 4  Sample 4           1          9        -0.078117229           Driven
-## 5  Sample 5           1          9        -0.026718082           Driven
-## 6  Sample 6           1         19         0.036078605           Damped
-##    Amplitude Radian.Frequency   Period Phase Shift Hours Shifted
-## 1  0.6164627        0.3243511 19.37155  -0.6585025      2.030215
-## 2  1.5772248        0.2731878 22.99951   2.5290548     13.741942
-## 3 -0.6307775        0.4780950 13.14213  -1.5783226      9.872337
-## 4  0.4262496        0.2191198 28.67466   0.9115305     24.514698
-## 5  0.9433894        0.3249436 19.33624  -1.9850863      6.109019
-## 6  1.6033760        0.1655006 37.96474   5.9626819      1.936570
+## 1  Sample 1           1          7         -0.05153645           Driven
+## 2  Sample 2           1          7          0.01158215           Damped
+## 3  Sample 3           1          6         -0.07416398           Driven
+## 4  Sample 4           1         10         -0.07811725           Driven
+## 5  Sample 5           1         22         -0.02671812           Driven
+## 6  Sample 6           1         19          0.03607861           Damped
+##   Amplitude Radian.Frequency   Period Phase Shift Hours Shifted
+## 1 0.6164627        0.3243511 19.37155  -0.6585025      2.030215
+## 2 1.5772231        0.2731879 22.99950   2.5290521     13.741946
+## 3 0.4877694        0.2788276 22.53430   3.5665380      9.743106
+## 4 0.4262496        0.2191200 28.67463   0.9115265     24.514688
+## 5 0.9433888        0.3249436 19.33624  10.5812842      6.109019
+## 6 1.6033760        0.1655006 37.96474   5.9626819      1.936570
 ##   Equilibrium Value       Tau      P-Value BH Adj P-Value BY Adj P-Value
 ## 1       0.002159052 0.9515331 9.508710e-52   5.705226e-51   1.770452e-50
-## 2       0.095058330 0.9505440 1.812635e-51   7.250539e-51   2.249995e-50
-## 3       0.002815542 0.1562809 7.412930e-02   7.412930e-02   2.300388e-01
-## 4       0.110273440 0.9287834 4.887969e-46   1.466391e-45   4.550520e-45
-## 5      -0.267901020 0.8925659 9.792497e-40   1.678714e-39   5.209402e-39
-## 6      -0.040058335 0.7127098 1.937502e-20   2.325002e-20   7.214971e-20</code></pre>
+## 2       0.095058780 0.9505440 1.812635e-51   7.250539e-51   2.249995e-50
+## 3      -0.217686468 0.7804154 1.640813e-25   2.187751e-25   6.789051e-25
+## 4       0.110272615 0.9287834 4.887969e-46   1.466391e-45   4.550520e-45
+## 5      -0.267901060 0.8925659 9.792497e-40   1.678714e-39   5.209402e-39
+## 6      -0.040058335 0.7127098 1.937502e-20   2.113638e-20   6.559065e-20</code></pre>
 <p>Since we’ve now searched for all possible periods, periods can now fall outside our predetermined range of 20 to 26 that we set in our first run. Let’s see how this affected the fit and parameters of the sample we looked at.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rep_genes &lt;-<span class="st"> </span>results[samp,<span class="dv">16</span><span class="op">:</span>(<span class="dv">15</span><span class="op">+</span>(<span class="kw">length</span>(tp)<span class="op">*</span>num_reps))]
 
@@ -335,14 +335,14 @@ p &lt;-<span class="st"> </span>p <span class="op">+</span>
            <span class="st">&quot;BY Adj P-Value:&quot;</span>,results<span class="op">$</span><span class="st">`</span><span class="dt">BY Adj P-Value</span><span class="st">`</span>[samp],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>))</code></pre></div>
 <pre><code>## Gene Name: Sample 2
 ## Convergence:1
-## Iterations:5
-## Forcing Coefficient:0.0115822306119123
+## Iterations:7
+## Forcing Coefficient:0.0115821511350654
 ## Oscillation Type:Damped
-## Amplitude1.57722478904992
-## Radian.Frequency:0.273187781527227
-## Period:22.999510710377
-## Phase Shift:2.52905477304299
-## Hours Shifted:13.7419415800719
+## Amplitude1.57722314797471
+## Radian.Frequency:0.273187879811216
+## Period:22.9995024359116
+## Phase Shift:2.52905209959498
+## Hours Shifted:13.7419464222895
 ## P-Value:1.81263485251528e-51
 ## BH Adj P-Value:7.25053941006114e-51
 ## BY Adj P-Value:2.24999513200891e-50</code></pre>
