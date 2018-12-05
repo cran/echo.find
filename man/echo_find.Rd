@@ -5,8 +5,8 @@
 \title{Function to calculate the results for all genes using the extended circadian harmonic oscillator (ECHO) method.}
 \usage{
 echo_find(genes, begin, end, resol, num_reps, low = 1, high = 2,
-  run_all_per, paired, rem_unexpr, rem_unexpr_amt = 70, is_normal,
-  is_de_linear_trend, is_smooth)
+  run_all_per, paired, rem_unexpr, rem_unexpr_amt = 70,
+  rem_unexpr_amt_below = 0, is_normal, is_de_linear_trend, is_smooth)
 }
 \arguments{
 \item{genes}{data frame of genes with the following specifications: first row is column labels, first column has gene labels/names, and all other columns have expression data. This expression data must be ordered by time point then by replicate, and must have evenly spaced time points. Any missing data must have cells left blank.}
@@ -31,6 +31,8 @@ echo_find(genes, begin, end, resol, num_reps, low = 1, high = 2,
 
 \item{rem_unexpr_amt}{percentage of expression for which genes should not be considered if rem_unexpr is TRUE}
 
+\item{rem_unexpr_amt_below}{cutoff for expression}
+
 \item{is_normal}{boolean that indicates whether data should be normalized or not}
 
 \item{is_de_linear_trend}{boolean that indicates whether linear trends should be removed from data or not}
@@ -42,14 +44,15 @@ results, a data frame which contains:
   \item{Gene Name}{gene name}
   \item{Convergence}{did the fit converge, or descriptor of type of data (constant, unexpressed, etc.)}
   \item{Iterations}{number of iterations}
-  \item{Forcing.Coefficient}{forcing coefficient value for fit}
+  \item{Amplitude.Change.Coefficient}{Amplitude change coefficient value for fit}
   \item{Oscillation Type}{Type of oscillation (damped, driven, etc.)}
-  \item{Amplitude}{Amplitude value for fit}
+  \item{Initial.Amplitude}{Initial amplitude value for fit}
   \item{Radian.Frequency}{Radian frequency for fit}
   \item{Period}{Period for fit (in time units)}
   \item{Phase Shift}{Phase shift for fit (radians)}
-  \item{Hours Shift}{Phase shift for fit (hours)}
+  \item{Hours Shifted}{Phase shift for fit (hours)}
   \item{Equilibrium Value}{Equilibrium shift for fit}
+  \item{Slope}{Slope value of original data, if linear baseline is removed}
   \item{Tau}{Kendall's tau between original and fitted values}
   \item{P-value}{P-value calculated based on Kendall's tau}
   \item{BH Adj P-Value}{Benjamini-Hochberg adjusted p-values}
@@ -66,7 +69,7 @@ Function to calculate the results for all genes using the extended circadian har
 \donttest{ # long example - commented out
 echo_find(genes = expressions, begin = 2, end = 48, resol = 2,
   num_reps = 3, low = 20, high = 26, run_all_per = FALSE,
-  paired = FALSE, rem_unexpr = FALSE, rem_unexpr_amt = 70,
+  paired = FALSE, rem_unexpr = FALSE, rem_unexpr_amt = 70, rem_unexpr_amt_below=0,
   is_normal = FALSE, is_de_linear_trend = FALSE, is_smooth = FALSE)
 }
 }

@@ -189,12 +189,15 @@ jtkdist <- function(timepoints,reps=1,normal=FALSE,alt=FALSE, jtk.alt) {
     jtk.dims <- c(nn*(nn-1)/2,1) # dimensions for distribution
 
     if(normal) { # unused, practically
-      JTK.VAR <- (nn^2*(2*nn+3) -
+      jtk.var <- (nn^2*(2*nn+3) -
                     sum(tim^2*(2*tim+3)))/72 # variance of jtk
-      JTK.SDV <- sqrt(JTK.VAR) # standard deviation of jtk
-      JTK.EXV <- jtk.max/2 # expected value of jtk
-      JTK.EXACT <- FALSE
-      return(invisible(0)) # omit calculation of exact distribution
+      jtk.sdv <- sqrt(jtk.var) # standard deviation of jtk
+      jtk.exv <- jtk.max/2 # expected value of jtk
+      jtk.exact <- FALSE
+
+      jtklist <- list("jtk.grp.size"=jtk.grp.size,"jtk.num.grps"=jtk.num.grps,"jtk.num.vals"=jtk.num.vals,"jtk.max"=jtk.max,"jtk.grps"=jtk.grps,"jtk.dims"=jtk.dims,"jtk.exact"=jtk.exact, "jtk.var"=jtk.var, "jtk.sdv" = jtk.sdv, "jtk.exv"=jtk.exv)
+
+      return(jtklist) # omit calculation of exact distribution
     }
   }
   MM <- floor(M/2) # mode of this possibly alternative jtk distribution
@@ -276,6 +279,7 @@ jtkdist <- function(timepoints,reps=1,normal=FALSE,alt=FALSE, jtk.alt) {
 #' \item{pval}{pvalue}
 #' \item{tau}{Kendall's tau}
 #' \item{S}{Kendall's S statistic}
+#' @importFrom stats pnorm
 #' @keywords internal
 #' @noRd
 calc_tau_and_p_jtk <- function(ref_waveform,times,num_reps,current_gene,jtklist, genes, jtk.alt){
@@ -316,16 +320,14 @@ calc_tau_and_p_jtk <- function(ref_waveform,times,num_reps,current_gene,jtklist,
     p <- switch(1+alt, # deciding between missing values (2) or not (1)
                 2*jtklist$jtk.cp[jtki],
                 2*jtk.alt[[alt.id]]$CP[jtki])
+  } else { # if we are using the normal distribution (unused, practically)
+    p <- switch(1+alt,
+                2*pnorm(-(jtk-1/2),
+                        -jtklist$jtk.exv,jtklist$jtk.sdv),
+                2*pnorm(-(jtk-1/2),
+                        -jtk.alt[[alt.id]]$EXV,
+                        jtk.alt[[alt.id]]$SDV))
   }
-  # if we are using the normal distribution (unused, practically)
-  # else {
-  #   p <- switch(1+alt,
-  #               2*pnorm(-(jtk-1/2),
-  #                       -JTK.EXV,JTK.SDV),
-  #               2*pnorm(-(jtk-1/2),
-  #                       -JTK.ALT[[alt.id]]$EXV,
-  #                       JTK.ALT[[alt.id]]$SDV))
-  # }
 
   # include tau = S/M for this distribution
   if (alt){ # if missing value, return the alternate distribution
@@ -693,7 +695,7 @@ calculate_param <- function(current_gene,times,resol,num_reps,tied,is_smooth=FAL
         lowfix <- (low/2/pi)^-1
         w0 <- 2*pi/(length(times)*resol/((highfix+lowfix)/2))
       }
-    } else if (length(peaks) == 1){ # phase shift cases only one peak to appear
+    } else if (length(peaks) == 1){ # phase shift causes only one peak to appear
       w0 <- 2*pi/(length(times)*resol/(length(peaks)+1))
     } else{
       w0 <- 2*pi/(length(times)*resol/(length(peaks)))
@@ -768,7 +770,7 @@ calculate_param <- function(current_gene,times,resol,num_reps,tied,is_smooth=FAL
     if (gam < -.15){
       type_gam <- "Overexpressed"
     } else if (gam <= -.01){
-      type_gam <- "Driven"
+      type_gam <- "Forced"
     } else if (gam <= .01){
       type_gam <- "Harmonic"
     } else if (gam <= .15){
@@ -860,15 +862,16 @@ calculate_param <- function(current_gene,times,resol,num_reps,tied,is_smooth=FAL
 #' Function for determining whether gene values are unexpressed (less than rem_unexpr_amt percent expressed (i.e., not 0)) for full matrix.
 #'
 #' @param rem_unexpr_amt percentage of expression for which genes should not be considered
+#' @param rem_unexpr_amt_below cutoff for expression
 #' @param genes data frame of genes with the following specifications: first row is column labels, first column has gene labels/names, and all other columns have expression data. This expression data must be ordered by time point then by replicate, and must have evenly spaced time points. Any missing data must have cells left blank.
 #' @return boolean if there is rem_unexpr_amt percent expression
 #' @keywords internal
 #' @noRd
-genes_unexpressed_all <- function(rem_unexpr_amt, genes){
+genes_unexpressed_all <- function(rem_unexpr_amt, rem_unexpr_amt_below, genes){
   #get matrix of just the relative expression over time
   all_reps <- as.matrix(genes[,2:ncol(genes)])
   # get how many genes are expressed for each gene
-  tot_expressed <- rowSums(all_reps != 0,na.rm = TRUE)
+  tot_expressed <- rowSums(abs(all_reps) > abs(rem_unexpr_amt_below),na.rm = TRUE)
 
   # return false if amount is less than threshold
   return(tot_expressed <= (ncol(all_reps)*rem_unexpr_amt))
@@ -883,7 +886,11 @@ genes_unexpressed_all <- function(rem_unexpr_amt, genes){
 #' @keywords internal
 #' @noRd
 is_deviating <- function(current_gene,genes){
-  stdev <- sd(genes[current_gene,-1], na.rm = TRUE)
+  if (all(is.na(genes[current_gene,-1])) | sum(!is.na(genes[current_gene,-1]))==1){
+    stdev <- 0
+  } else {
+    stdev <- sd(genes[current_gene,-1], na.rm = TRUE)
+  }
   return (stdev != 0)
 }
 
@@ -936,11 +943,11 @@ smoothing_all_tied <- function(is_weighted, num_reps, genes, tied, timen){
   for (i in 1:num_reps){
     # sum the replicates
     left <- cbind(matrix(0,nrow(all_reps),1),center_reps[[i]][,-ncol(center_reps[[i]])]/2) # left shifted matrix
-    right <- cbind(center_reps[[i]][,-1]/2,matrix(0,nrow(genes),1)) # right shifted matrix
+    right <- cbind(mtx_count[[i]][,-1]/2,matrix(0,nrow(genes),1)) # right shifted matrix
     center_reps[[i]] <- left + center_reps[[i]] + right
 
     # figure out how many replicates are actually available for each time point
-    left_na <- cbind(matrix(0,nrow(all_reps),1),mtx_count[[i]][,-ncol(mtx_count[[i]])]) # left shifted matrix
+    left_na <- cbind(matrix(0,nrow(all_reps),1),mtx_count[[i]][,-ncol(mtx_count[[i]])]/2) # left shifted matrix
     right_na <- cbind(mtx_count[[i]][,-1],matrix(0,nrow(genes),1)) # right shifted matrix
     repmtx_l[[i]] <- repmtx - left_na - mtx_count[[i]] - right_na
     # to avoid division by 0 and induce NAs if there are no time points available
@@ -1066,7 +1073,7 @@ normalize_all <- function(genes){
 #' @param num_reps number of replicates
 #' @param tied whether replicates are paired (tied) or unpaired (untied)
 #' @param genes data frame of genes with the following specifications: first row is column labels, first column has gene labels/names, and all other columns have expression data. This expression data must be ordered by time point then by replicate, and must have evenly spaced time points. Any missing data must have cells left blank.
-#' @return a data frame containing the detrended expressions
+#' @return a list containing data frame containing the detrended expressions and vector of slopes
 #' @keywords internal
 #' @noRd
 de_linear_trend_all <- function(timen,num_reps,tied,genes){
@@ -1076,6 +1083,8 @@ de_linear_trend_all <- function(timen,num_reps,tied,genes){
     # x values for linear fit
     xrow <- rep(timen,each=num_reps)
     xmtx <- matrix(rep(xrow,each=nrow(all_rep)),nrow = nrow(all_rep))
+    # preallocating to store slopes
+    beta.df <- data.frame(matrix(NA, nrow(genes), num_reps))
 
     # covariance
     cov <- rowSums((all_rep-rowMeans(all_rep,na.rm = TRUE))*(xmtx-rowMeans(xmtx)),na.rm = TRUE)
@@ -1083,7 +1092,7 @@ de_linear_trend_all <- function(timen,num_reps,tied,genes){
     var <- rowSums((xmtx - rowMeans(xmtx))^2,na.rm = TRUE)
 
     # fitted coefficients - a+bx
-    beta <- cov/var
+    beta.df[,i] <- beta <- cov/var
     alph <- rowMeans(all_rep,na.rm = TRUE)-(beta*rowMeans(xmtx))
 
     # remove linear trend
@@ -1113,5 +1122,8 @@ de_linear_trend_all <- function(timen,num_reps,tied,genes){
   res_df <- genes
   res_df[,-1] <- df
 
-  return (res_df)
+  # now we return the slope and the altered expressions
+  res_list <- list("res_df" = res_df, "beta" = beta)
+
+  return (res_list)
 }

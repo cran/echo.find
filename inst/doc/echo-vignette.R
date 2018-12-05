@@ -84,11 +84,11 @@ results <- echo_find(genes = genes, begin = begin, end = end, resol = resol,
   paired = paired, rem_unexpr = rem_unexpr, is_normal = is_normal,
   is_de_linear_trend = is_de_linear_trend, is_smooth = is_smooth)
 
-head(results[,1:15])
+head(results[,1:16])
 
 ## ----fig.align="center",fig.height = 4, fig.width = 6--------------------
 # assign the fit to the visualization data frame
-ribbon.df$Fit <- t(results[samp,(16+(length(tp)*num_reps)):ncol(results)])
+ribbon.df$Fit <- t(results[samp,(17+(length(tp)*num_reps)):ncol(results)])
 
 # visualize, with shading for each row
 # add Fit line
@@ -129,12 +129,12 @@ results <- echo_find(genes = genes, begin = begin, end = end, resol = resol,
   rem_unexpr = rem_unexpr, rem_unexpr_amt = rem_unexpr_amt, is_normal = is_normal,
   is_de_linear_trend = is_de_linear_trend, is_smooth = is_smooth)
 
-head(results[,1:15])
+head(results[,1:16])
 
 
 ## ----fig.align="center",fig.height = 4, fig.width = 6--------------------
 
-rep_genes <- results[samp,16:(15+(length(tp)*num_reps))]
+rep_genes <- results[samp,17:(16+(length(tp)*num_reps))]
 
  # getting min values of replicates
 ribbon.df$Min <- sapply(seq(1,ncol(rep_genes), by = num_reps), 
@@ -148,7 +148,7 @@ for (i in 1:num_reps){ # assign each of the replicates
   ribbon.df[,3+i] <- t(rep_genes[,seq(i,ncol(rep_genes),by=num_reps)])
 }
 # assign the fit to the visualization data frame
-ribbon.df$Fit <- t(results[samp,(16+(length(tp)*num_reps)):ncol(results)])
+ribbon.df$Fit <- t(results[samp,(17+(length(tp)*num_reps)):ncol(results)])
 
 # visualize, with shading for each row
 p <- ggplot(data = ribbon.df,aes(x=Times))+ # declare the dataframe and main variables

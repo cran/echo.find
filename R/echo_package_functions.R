@@ -16,6 +16,7 @@
 #' @param paired if replicate data, whether the replicates are related (paired) or not (unpaired)
 #' @param rem_unexpr boolean indicating whether genes with less than rem_unexpr_amt percent expression should not be considered
 #' @param rem_unexpr_amt percentage of expression for which genes should not be considered if rem_unexpr is TRUE
+#' @param rem_unexpr_amt_below cutoff for expression
 #' @param is_normal boolean that indicates whether data should be normalized or not
 #' @param is_de_linear_trend boolean that indicates whether linear trends should be removed from data or not
 #' @param is_smooth boolean that indicates whether data should be smoothed or not
@@ -23,14 +24,15 @@
 #'   \item{Gene Name}{gene name}
 #'   \item{Convergence}{did the fit converge, or descriptor of type of data (constant, unexpressed, etc.)}
 #'   \item{Iterations}{number of iterations}
-#'   \item{Forcing.Coefficient}{forcing coefficient value for fit}
+#'   \item{Amplitude.Change.Coefficient}{Amplitude change coefficient value for fit}
 #'   \item{Oscillation Type}{Type of oscillation (damped, driven, etc.)}
-#'   \item{Amplitude}{Amplitude value for fit}
+#'   \item{Initial.Amplitude}{Initial amplitude value for fit}
 #'   \item{Radian.Frequency}{Radian frequency for fit}
 #'   \item{Period}{Period for fit (in time units)}
 #'   \item{Phase Shift}{Phase shift for fit (radians)}
-#'   \item{Hours Shift}{Phase shift for fit (hours)}
+#'   \item{Hours Shifted}{Phase shift for fit (hours)}
 #'   \item{Equilibrium Value}{Equilibrium shift for fit}
+#'   \item{Slope}{Slope value of original data, if linear baseline is removed}
 #'   \item{Tau}{Kendall's tau between original and fitted values}
 #'   \item{P-value}{P-value calculated based on Kendall's tau}
 #'   \item{BH Adj P-Value}{Benjamini-Hochberg adjusted p-values}
@@ -45,14 +47,14 @@
 #' \donttest{ # long example - commented out
 #' echo_find(genes = expressions, begin = 2, end = 48, resol = 2,
 #'   num_reps = 3, low = 20, high = 26, run_all_per = FALSE,
-#'   paired = FALSE, rem_unexpr = FALSE, rem_unexpr_amt = 70,
+#'   paired = FALSE, rem_unexpr = FALSE, rem_unexpr_amt = 70, rem_unexpr_amt_below=0,
 #'   is_normal = FALSE, is_de_linear_trend = FALSE, is_smooth = FALSE)
 #' }
-echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run_all_per, paired, rem_unexpr, rem_unexpr_amt = 70, is_normal, is_de_linear_trend, is_smooth){
+echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run_all_per, paired, rem_unexpr, rem_unexpr_amt = 70, rem_unexpr_amt_below=0, is_normal, is_de_linear_trend, is_smooth){
     # creating times sequence used for the genes
     timen <- seq(begin,end,resol) # time points for cicadian rhythms
     tied <- paired
-
+    print("here")
     if (num_reps == 1){ # one replicate, default to true paired-ness
       tied <- TRUE
     }
@@ -75,9 +77,9 @@ echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run
   rem_unexpr_amt <- (rem_unexpr_amt)/100 # threshold for removing unexpressed genes, converted to a decimal
   # if yes, check for genes that are unexpressed before preprocessing
   if (rem_unexpr){
-    rem_unexpr_vect <- genes_unexpressed_all(rem_unexpr_amt, genes)
+    rem_unexpr_vect <- genes_unexpressed_all(rem_unexpr_amt, abs(rem_unexpr_amt_below), genes)
   } else{
-    rem_unexpr_vect <- rep(TRUE,nrow(genes))
+    rem_unexpr_vect <- rep(FALSE,nrow(genes))
   }
 
   # normalize and store original data
@@ -88,7 +90,11 @@ echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run
 
   # remove baseline
   if (is_de_linear_trend){
-    genes <- de_linear_trend_all(timen,num_reps,tied,genes)
+    res_list <- de_linear_trend_all(timen,num_reps,tied,genes)
+    genes <- res_list$res_df # expressions with removed baseline
+    beta <- res_list$beta # slopes
+  } else {
+    beta <- rep(NA, nrow(genes))
   }
 
   # getting average data, for more than one replicate
@@ -136,7 +142,7 @@ echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run
   total_results <- data.frame(matrix(0,nrow = nrow(genes), ncol = 13+length(rep(timen, each = num_reps))+length(timen)))
 
   # renaming columns of the final results
-  colnames(total_results) <- c("Gene Name","Convergence","Iterations","Forcing.Coefficient","Oscillation Type","Amplitude","Radian.Frequency","Period","Phase Shift","Hours Shifted","Equilibrium Value", "Tau", "P-Value", paste(rep("Original TP",length(rep(timen, each = num_reps))),rep(timen, each = num_reps),rep(".",length(rep(timen, each = num_reps))),rep(c(1:num_reps), length(timen)),sep=""), paste(rep("Fitted TP",length(timen)),timen,sep=""))
+  colnames(total_results) <- c("Gene Name","Convergence","Iterations","Amplitude.Change.Coefficient","Oscillation Type","Initial.Amplitude","Radian.Frequency","Period","Phase Shift","Hours Shifted","Equilibrium Value", "Tau", "P-Value", paste(rep("Original TP",length(rep(timen, each = num_reps))),rep(timen, each = num_reps),rep(".",length(rep(timen, each = num_reps))),rep(c(1:num_reps), length(timen)),sep=""), paste(rep("Fitted TP",length(timen)),timen,sep=""))
 
   # now go through one by one and get results
   for (i in 1:nrow(genes)){
@@ -152,11 +158,14 @@ echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run
     total_results <- total_results[-nrow(total_results),]
   }
 
+  # add slope
+  total_results <- cbind(total_results[,c(1:11)],`Slope` = beta, total_results[,c(12:ncol(total_results))])
+
   adjusted_p_val_us <- p.adjust(unlist(total_results$`P-Value`), method = "BH") # benjamini-hochberg adjust p-values
-  total_results <- cbind(total_results[,c(1:13)],`BH Adj P-Value` = adjusted_p_val_us, total_results[,c(14:ncol(total_results))]) # assign to data frame
+  total_results <- cbind(total_results[,c(1:14)],`BH Adj P-Value` = adjusted_p_val_us, total_results[,c(15:ncol(total_results))]) # assign to data frame
 
   # adding the benjamini-hochberg-yekutieli p-value adjustment
-  total_results <- cbind(total_results[,c(1:14)],`BY Adj P-Value` = p.adjust(unlist(total_results$`P-Value`), method = "BY"), total_results[,c(15:ncol(total_results))])
+  total_results <- cbind(total_results[,c(1:15)],`BY Adj P-Value` = p.adjust(unlist(total_results$`P-Value`), method = "BY"), total_results[,c(16:ncol(total_results))])
 
   return(total_results)
 }
