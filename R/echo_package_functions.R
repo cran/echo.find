@@ -20,6 +20,11 @@
 #' @param is_normal boolean that indicates whether data should be normalized or not
 #' @param is_de_linear_trend boolean that indicates whether linear trends should be removed from data or not
 #' @param is_smooth boolean that indicates whether data should be smoothed or not
+#' @param run_conf boolean of whether or not to run confidence intervals
+#' @param which_conf string of which type of confidence interval to compute ("Bootstrap" or "Jackknife")
+#' @param harm_cut postive number indicating the cutoff for a gene to be considered harmonic
+#' @param over_cut postive number indicating the cutoff for a gene to be considered repressed/overexpressed
+#' @param seed number for random seed to fix for bootstrapping for confidence intervals
 #' @return results, a data frame which contains:
 #'   \item{Gene Name}{gene name}
 #'   \item{Convergence}{did the fit converge, or descriptor of type of data (constant, unexpressed, etc.)}
@@ -37,7 +42,9 @@
 #'   \item{P-value}{P-value calculated based on Kendall's tau}
 #'   \item{BH Adj P-Value}{Benjamini-Hochberg adjusted p-values}
 #'   \item{BY Adj P-Value}{Benjamini-Yekutieli adjusted p-values}
-#'   \item{Original TPX.Y}{Original values for gene expression at time point X, replicate Y}
+#'   \item{CI.PARAM.Low}{Lower confidence interval bound for all parameters, if calculated}
+#'   \item{CI.PARAM.High}{Higher confidence interval bound for all parameters, if calculated}
+#'   \item{Original TPX.Y}{Processed values for gene expression at time point X, replicate Y}
 #'   \item{Fitted TPX}{Fitted values for gene expression at time point X}
 #' @export
 #' @importFrom stats p.adjust
@@ -50,11 +57,11 @@
 #'   paired = FALSE, rem_unexpr = FALSE, rem_unexpr_amt = 70, rem_unexpr_amt_below=0,
 #'   is_normal = FALSE, is_de_linear_trend = FALSE, is_smooth = FALSE)
 #' }
-echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run_all_per, paired, rem_unexpr, rem_unexpr_amt = 70, rem_unexpr_amt_below=0, is_normal, is_de_linear_trend, is_smooth){
+echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run_all_per, paired, rem_unexpr, rem_unexpr_amt = 70, rem_unexpr_amt_below=0, is_normal, is_de_linear_trend, is_smooth, run_conf = F, which_conf = "Bootstrap", harm_cut = .03, over_cut = .15, seed = 30){
     # creating times sequence used for the genes
     timen <- seq(begin,end,resol) # time points for cicadian rhythms
     tied <- paired
-    print("here")
+
     if (num_reps == 1){ # one replicate, default to true paired-ness
       tied <- TRUE
     }
@@ -132,25 +139,28 @@ echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run
     high <- 2*pi/as.numeric(high)
   }
 
-  # if more than one replicate or requested, an exact distribution is needed
-  # create exact distribution for pvalues
-  jtklist <- jtkdist(length(timen), reps = num_reps)
-  jtk.alt <- list() # preallocate pvalue distribution for missing data
-
   # where we put the result
-  # preallocate results matrix
-  total_results <- data.frame(matrix(0,nrow = nrow(genes), ncol = 13+length(rep(timen, each = num_reps))+length(timen)))
 
   # renaming columns of the final results
-  colnames(total_results) <- c("Gene Name","Convergence","Iterations","Amplitude.Change.Coefficient","Oscillation Type","Initial.Amplitude","Radian.Frequency","Period","Phase Shift","Hours Shifted","Equilibrium Value", "Tau", "P-Value", paste(rep("Original TP",length(rep(timen, each = num_reps))),rep(timen, each = num_reps),rep(".",length(rep(timen, each = num_reps))),rep(c(1:num_reps), length(timen)),sep=""), paste(rep("Fitted TP",length(timen)),timen,sep=""))
+  if (!run_conf){
+    # preallocate results matrix
+    total_results <- data.frame(matrix(0,nrow = nrow(genes), ncol = 13+length(rep(timen, each = num_reps))+length(timen)))
+
+    colnames(total_results) <- c("Gene Name","Convergence","Iterations","Amplitude.Change.Coefficient","Oscillation Type","Initial.Amplitude","Radian.Frequency","Period","Phase Shift","Hours Shifted","Equilibrium Value", "Tau", "P-Value", paste(rep("Original TP",length(rep(timen, each = num_reps))),rep(timen, each = num_reps),rep(".",length(rep(timen, each = num_reps))),rep(c(1:num_reps), length(timen)),sep=""), paste(rep("Fitted TP",length(timen)),timen,sep=""))
+  } else {
+
+    # preallocate results matrix
+    total_results <- data.frame(matrix(0,nrow = nrow(genes), ncol = 13+10+length(rep(timen, each = num_reps))+length(timen)))
+
+    conf_int_names <- c("CI.AC.Coeff","CI.Init.Amp","CI.Rad.Freq","CI.Phase.Shift","CI.Eq.Val")
+    conf_int_names <- c(paste0(conf_int_names,".Low"), paste0(conf_int_names,".High"))
+    colnames(total_results) <- c("Gene Name","Convergence","Iterations","Amplitude.Change.Coefficient","Oscillation Type","Initial.Amplitude","Radian.Frequency","Period","Phase Shift","Hours Shifted","Equilibrium Value", "Tau", "P-Value", conf_int_names, paste(rep("Original TP",length(rep(timen, each = num_reps))),rep(timen, each = num_reps),rep(".",length(rep(timen, each = num_reps))),rep(c(1:num_reps), length(timen)),sep=""), paste(rep("Fitted TP",length(timen)),timen,sep=""))
+  }
 
   # now go through one by one and get results
   for (i in 1:nrow(genes)){
-    res <- calculate_param(i, timen, resol, num_reps, tied = tied, is_smooth = is_smooth, is_weighted = is_weighted,low = low,high = high,rem_unexpr = rem_unexpr, rem_unexpr_amt = rem_unexpr_amt, jtklist, genes, rem_unexpr_vect, avg_genes, jtk.alt)
+    res <- calculate_param(i, timen, resol, num_reps, tied = tied, is_smooth = is_smooth, is_weighted = is_weighted,low = low,high = high,rem_unexpr = rem_unexpr, rem_unexpr_amt = rem_unexpr_amt, run_conf = run_conf, which_conf = which_conf, harm_cut = harm_cut, over_cut = over_cut, seed = seed, genes, rem_unexpr_vect, avg_genes)
     total_results[i,] <- res$results
-    if (any(is.na(unlist(genes[i,-1])))){
-      jtk.alt <- res$jtk.alt
-    }
   }
 
   # remove the fake row I added if there is only one gene

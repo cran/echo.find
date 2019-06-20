@@ -6,7 +6,9 @@
 \usage{
 echo_find(genes, begin, end, resol, num_reps, low = 1, high = 2,
   run_all_per, paired, rem_unexpr, rem_unexpr_amt = 70,
-  rem_unexpr_amt_below = 0, is_normal, is_de_linear_trend, is_smooth)
+  rem_unexpr_amt_below = 0, is_normal, is_de_linear_trend, is_smooth,
+  run_conf = F, which_conf = "Bootstrap", harm_cut = 0.03,
+  over_cut = 0.15, seed = 30)
 }
 \arguments{
 \item{genes}{data frame of genes with the following specifications: first row is column labels, first column has gene labels/names, and all other columns have expression data. This expression data must be ordered by time point then by replicate, and must have evenly spaced time points. Any missing data must have cells left blank.}
@@ -38,6 +40,16 @@ echo_find(genes, begin, end, resol, num_reps, low = 1, high = 2,
 \item{is_de_linear_trend}{boolean that indicates whether linear trends should be removed from data or not}
 
 \item{is_smooth}{boolean that indicates whether data should be smoothed or not}
+
+\item{run_conf}{boolean of whether or not to run confidence intervals}
+
+\item{which_conf}{string of which type of confidence interval to compute ("Bootstrap" or "Jackknife")}
+
+\item{harm_cut}{postive number indicating the cutoff for a gene to be considered harmonic}
+
+\item{over_cut}{postive number indicating the cutoff for a gene to be considered repressed/overexpressed}
+
+\item{seed}{number for random seed to fix for bootstrapping for confidence intervals}
 }
 \value{
 results, a data frame which contains:
@@ -57,7 +69,9 @@ results, a data frame which contains:
   \item{P-value}{P-value calculated based on Kendall's tau}
   \item{BH Adj P-Value}{Benjamini-Hochberg adjusted p-values}
   \item{BY Adj P-Value}{Benjamini-Yekutieli adjusted p-values}
-  \item{Original TPX.Y}{Original values for gene expression at time point X, replicate Y}
+  \item{CI.PARAM.Low}{Lower confidence interval bound for all parameters, if calculated}
+  \item{CI.PARAM.High}{Higher confidence interval bound for all parameters, if calculated}
+  \item{Original TPX.Y}{Processed values for gene expression at time point X, replicate Y}
   \item{Fitted TPX}{Fitted values for gene expression at time point X}
 }
 \description{

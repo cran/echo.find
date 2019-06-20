@@ -165,6 +165,7 @@ This fit matches pretty closely to the trend, which is emphasized by the very lo
 
 Now let's see how preprocessing affects the results. Here we search for all possible periods, using the default values for low and high, as well as allowing for all our preprocessing options: removing unexpressed genes, normalizing, removing linear trends, and smoothing.
 
+
 ```{r}
 
 run_all_per <- TRUE # looking for all possible periods
@@ -247,6 +248,8 @@ cat(paste0("Gene Name: ",results$`Gene Name`[samp],"\n",
 ```
 
 We can see that the fit hasn't changed very much, but that the smoothing has gotten the replicates much closer to each other. This smoothing has also reduced the amount of damping in the system: the forcing coefficient has decreased by about .002.
+
+Other selections are also available. Confidence interval calculations with either bootstrapping or jackknifing with a set random seed for reproducibility are also available through the run_conf, which_conf, and seed options respectively. However, it is important to note that this will increase the time length of runs. Further, adjustments for the harmonic and overexpressed cutoffs can be adjusted through the harm_cut and over_cut parameters, respectively, though the defaults are recommended.
 
 Now that you understand the basics of using the echo_find() function, feel free to experiment and play around with this vignette and the example data. Good luck with your rhythm searches!
 
