@@ -1,19 +1,26 @@
 citHeader("To cite echo.find in publications use:")
 
-citEntry(entry = "Manual",
-  title        = "Finding Rhythms Using Extended Circadian Harmonic Oscillators (ECHO)",
+citEntry(entry = "Article",
+  title        = "ECHO: an application for detection and analysis of oscillators identifies metabolic regulation on genome-wide circadian output",
   author       = personList(person(given="Hannah", family="De los Santos"),
-                  as.person("Emily Collins"),
-                  as.person("Kristin Bennett"),
-                  as.person("Jennifer Hurley")),
-  journal      = "Journal of Statistical Software",
-  year         = "2019",
-  note         = "R package version 3.0",
-  url          = "https://CRAN.R-project.org/package=echo.find",
+                  as.person("Emily J Collins"),
+                  as.person("Catherine Mann"),
+                  as.person("April W Sagan"),
+                  as.person("Meaghan S Jankowski"),
+                  as.person("Kristin P Bennett"),
+                  as.person("Jennifer M Hurley")),
+  journal      = "Bioinformatics",
+  year         = "2020",
+  note         = "R package version 4.0",
+  doi = "10.1093/bioinformatics/btz617",
+  volume = "36",
+  number = "3",
+  pages = "773-781",
+  year = "2019",
+  month = "08",
+  url = "https://doi.org/10.1093/bioinformatics/btz617",
+  issn = "1367-4803",
 
   textVersion  =
-  paste("Hannah De los Santos, Emily Collins, Kristin Bennett, Jennifer Hurley (2019).",
-        "Finding Rhythms Using Extended Circadian Harmonic Oscillators (ECHO).",
-        "R package version 3.0.",
-        "URL https://CRAN.R-project.org/package=echo.find.")
+  paste("Hannah De los Santos, Emily J Collins, Catherine Mann, April W Sagan, Meaghan S Jankowski, Kristin P Bennett, Jennifer M Hurley, ECHO: an application for detection and analysis of oscillators identifies metabolic regulation on genome-wide circadian output, Bioinformatics, Volume 36, Issue 3, 1 February 2020, Pages 773–781, https://doi.org/10.1093/bioinformatics/btz617")
 )

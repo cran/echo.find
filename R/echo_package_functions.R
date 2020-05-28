@@ -27,8 +27,8 @@
 #' @param seed number for random seed to fix for bootstrapping for confidence intervals
 #' @return results, a data frame which contains:
 #'   \item{Gene Name}{gene name}
-#'   \item{Convergence}{did the fit converge, or descriptor of type of data (constant, unexpressed, etc.)}
-#'   \item{Iterations}{number of iterations}
+#'   \item{Convergence}{depreciated result, always 0, will be removed in future versions}
+#'   \item{Iterations}{depreciated result, always 0, will be removed in future versions}
 #'   \item{Amplitude.Change.Coefficient}{Amplitude change coefficient value for fit}
 #'   \item{Oscillation Type}{Type of oscillation (damped, driven, etc.)}
 #'   \item{Initial.Amplitude}{Initial amplitude value for fit}
@@ -128,15 +128,15 @@ echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run
   # figuring out whether a range is wanted, adjusting accordingly
   if (run_all_per){ # empty low input, adjust to time series
     if (resol >= 1){
-      low <- 2*pi/resol
+      low_rad <- 2*pi/resol
     }
     else{ # if the begining is <1, smallest period available is 1 (because hours)
-      low <- 2*pi/1
+      low_rad <- 2*pi/1
     }
-    high <- 2*pi/(resol*length(timen))
+    high_rad <- 2*pi/(resol*length(timen))
   } else{ # periods are specified
-    low <- 2*pi/as.numeric(low)
-    high <- 2*pi/as.numeric(high)
+    low_rad <- 2*pi/as.numeric(low)
+    high_rad <- 2*pi/as.numeric(high)
   }
 
   # where we put the result
@@ -150,7 +150,7 @@ echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run
   } else {
 
     # preallocate results matrix
-    total_results <- data.frame(matrix(0,nrow = nrow(genes), ncol = 13+10+length(rep(timen, each = num_reps))+length(timen)))
+    total_results <- data.frame(matrix(NA,nrow = nrow(genes), ncol = 13+10+length(rep(timen, each = num_reps))+length(timen)))
 
     conf_int_names <- c("CI.AC.Coeff","CI.Init.Amp","CI.Rad.Freq","CI.Phase.Shift","CI.Eq.Val")
     conf_int_names <- c(paste0(conf_int_names,".Low"), paste0(conf_int_names,".High"))
@@ -159,13 +159,14 @@ echo_find <- function(genes, begin, end, resol, num_reps, low = 1, high = 2, run
 
   # now go through one by one and get results
   for (i in 1:nrow(genes)){
-    res <- calculate_param(i, timen, resol, num_reps, tied = tied, is_smooth = is_smooth, is_weighted = is_weighted,low = low,high = high,rem_unexpr = rem_unexpr, rem_unexpr_amt = rem_unexpr_amt, run_conf = run_conf, which_conf = which_conf, harm_cut = harm_cut, over_cut = over_cut, seed = seed, genes, rem_unexpr_vect, avg_genes)
-    total_results[i,] <- res$results
+    res <- calculate_param(i, timen, resol, num_reps, tied = tied, is_smooth = is_smooth, is_weighted = is_weighted,low = low_rad,high = high_rad,rem_unexpr = rem_unexpr, rem_unexpr_amt = rem_unexpr_amt, run_conf = run_conf, which_conf = which_conf, harm_cut = harm_cut, over_cut = over_cut, seed = seed, genes, rem_unexpr_vect, avg_genes)
+    total_results[i,] <- res
   }
 
   # remove the fake row I added if there is only one gene
   if (add_one){
     total_results <- total_results[-nrow(total_results),]
+    beta <- beta[1]
   }
 
   # add slope

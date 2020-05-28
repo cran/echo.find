@@ -54,8 +54,8 @@ echo_find(genes, begin, end, resol, num_reps, low = 1, high = 2,
 \value{
 results, a data frame which contains:
   \item{Gene Name}{gene name}
-  \item{Convergence}{did the fit converge, or descriptor of type of data (constant, unexpressed, etc.)}
-  \item{Iterations}{number of iterations}
+  \item{Convergence}{depreciated result, always 0, will be removed in future versions}
+  \item{Iterations}{depreciated result, always 0, will be removed in future versions}
   \item{Amplitude.Change.Coefficient}{Amplitude change coefficient value for fit}
   \item{Oscillation Type}{Type of oscillation (damped, driven, etc.)}
   \item{Initial.Amplitude}{Initial amplitude value for fit}
