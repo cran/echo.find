@@ -2,12 +2,11 @@ Package: echo.find
 Type: Package
 Title: Finding Rhythms Using Extended Circadian Harmonic Oscillators
         (ECHO)
-Version: 4.0
-Authors@R: c(person("Hannah", "De los Santos", email = "delosh@rpi.edu",
-  role = c("aut", "cre")),
+Version: 4.0.1
+Authors@R: c(person("Hannah", "De los Santos", role = c("aut")),
   person("Emily", "Collins", role = c("aut")),
   person("Kristin", "Bennett", role = c("aut")),
-  person("Jennifer", "Hurley", role = c("aut")),
+  person("Jennifer", "Hurley", email = "hurlej2@rpi.edu", role = c("aut","cre")),
   person("R Development Core Team", role = c("aut")))
 Description: Provides a function (echo_find()) designed to find rhythms 
     from data using extended harmonic oscillators. For more information,
@@ -21,12 +20,12 @@ RoxygenNote: 6.1.1
 Suggests: knitr, rmarkdown, ggplot2
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2020-05-28 21:34:15 UTC; delosh
-Author: Hannah De los Santos [aut, cre],
+Packaged: 2020-06-10 13:45:25 UTC; delosh
+Author: Hannah De los Santos [aut],
   Emily Collins [aut],
   Kristin Bennett [aut],
-  Jennifer Hurley [aut],
+  Jennifer Hurley [aut, cre],
   R Development Core Team [aut]
-Maintainer: Hannah De los Santos <delosh@rpi.edu>
+Maintainer: Jennifer Hurley <hurlej2@rpi.edu>
 Repository: CRAN
-Date/Publication: 2020-05-28 21:50:03 UTC
+Date/Publication: 2020-06-10 19:50:14 UTC

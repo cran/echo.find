@@ -1,4 +1,4 @@
-0e02128f1c17f581fa54b6517fe66a85 *DESCRIPTION
+619515f6ddfe2dffb02163465cb1b7f0 *DESCRIPTION
 dc72179bb1725b5ed0fd15ff45f07f5e *LICENSE
 8f716fb4dadeaced3c86a7ddc4f874cf *NAMESPACE
 a4512be02a567196c222e19a01dc7ca8 *R/echo_data.R
@@ -10,7 +10,7 @@ b93c377408223603565d187197ece2b2 *data/expressions.RData
 731502995667468b9c15006fec0f4156 *inst/CITATION
 54c79c28bfbff41984d62a9f41cb66c4 *inst/doc/echo-vignette.R
 4780cbfe2ad37b3a14e80cec6651a084 *inst/doc/echo-vignette.Rmd
-4c98ad7f0ef093600597ffb6735e8676 *inst/doc/echo-vignette.html
+3550b5223d810493723dfcf902d524a1 *inst/doc/echo-vignette.html
 24e39b2bd1485f2b3b91b3dd5d1687d7 *man/echo.find.Rd
 ead96122bca0117e44519e39b30b0ac1 *man/echo_find.Rd
 5b7fa823f06f12eb0891a7b425ee1748 *man/expressions.Rd
